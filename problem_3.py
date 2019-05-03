@@ -31,7 +31,7 @@ def serialize(node):
         values.append(serialize(node.right))
     else:
         values.append('#')
-    
+
     return ' '.join(values)
 
 def serialize_generator(node):
