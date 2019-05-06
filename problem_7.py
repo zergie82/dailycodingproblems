@@ -31,3 +31,19 @@ def helper(message, k, memo):
 def count(message):
     memo = [None] * (len(message) + 1)
     return helper(message, len(message), memo)
+
+# O(2^n)
+def count2(message):
+    if message.startswith('0'):
+        return 0
+    if len(message) <= 1:
+        return 1
+
+    total = 0
+
+    if int(message[:2]) <= 26:
+        total += count2(message[2:])
+
+    total += count2(message[1:])
+
+    return total
