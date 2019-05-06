@@ -34,6 +34,11 @@ def serialize(node):
 
     return ' '.join(values)
 
+def serialize2(node):
+    if node is None:
+        return '#'
+    return '{} {} {}'.format(node.val, serialize2(node.left), serialize2(node.right))
+
 def serialize_generator(node):
     if node:
         yield node.val
@@ -45,8 +50,8 @@ def serialize_generator(node):
         yield '#'
 
 def deserialize(data):
-    #vals = iter(data.split(' '))
-    vals = data
+    vals = iter(data.split())
+    # vals = data
 
     def decode(vals):
         val = next(vals)
@@ -61,4 +66,8 @@ def deserialize(data):
 
 if __name__ == "__main__":
     node = Node('root', Node('left', Node('left.left')), Node('right'))
+    print(serialize(node))
+    print(serialize2(node))
+    print(list(serialize_generator(node)))
     assert deserialize(serialize(node)).left.left.val == 'left.left'
+    # assert deserialize(serialize_generator(node)).left.left.val == 'left.left'
