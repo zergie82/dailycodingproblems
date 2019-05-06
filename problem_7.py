@@ -47,3 +47,26 @@ def count2(message):
     total += count2(message[1:])
 
     return total
+
+# O(n)
+from collections import defaultdict
+def count3(s):
+    cache = defaultdict(int)
+    cache[len(s)] = 1
+
+    for i in reversed(range(len(s))):
+        if s[i].startswith('0'):
+            cache[i] = 0
+        elif i == len(s) - 1:
+            cache[i] = 1
+        else:
+            if int(s[i:i + 2]) <= 26:
+                cache[i] = cache[i + 2]
+            cache[i] += cache[i + 1]
+    return cache[0]
+
+if __name__ == '__main__':
+    s = '111562017'
+    print(count(s))
+    print(count2(s))
+    print(count3(s))
