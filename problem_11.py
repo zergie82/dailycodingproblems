@@ -46,7 +46,7 @@ def complete(words, prefix):
 if __name__ == '__main__':
     words = ['dog', 'deer', 'deal']
     complete(words, 'de')
-    
+
     trie = Trie()
     for word in words:
         trie.insert(word)
@@ -54,9 +54,9 @@ if __name__ == '__main__':
 
     words = ['able', 'abode', 'about', 'above', 'abuse', 'syzygy']
     complete(words, 'abo')
-    
+
     trie = Trie()
     for word in words:
         trie.insert(word)
-    print(['abo' + w for w in trie.suffixes('abo')]) 
+    print(['abo' + w for w in trie.suffixes('abo')])
 
