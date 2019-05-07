@@ -7,13 +7,15 @@ import random
 def pick(stream):
     el = None
     sample = []
-    sample_size = 1
+
+    SAMPLE_SIZE = 1
+
     for index, value in enumerate(stream):
-        if index < sample_size:
+        if index < SAMPLE_SIZE:
             sample.append(value)
         else:
             r = random.randint(0, index)
-            if r < sample_size:
+            if r < SAMPLE_SIZE:
                 sample[r] = value
 
     print(sample)
