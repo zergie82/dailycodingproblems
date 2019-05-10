@@ -31,64 +31,104 @@ The name of a file contains at least a period and an extension.
 The name of a directory or sub-directory will not contain a period.
 '''
 
-class Node:
-    def __init__(self, val=None, level=None, parent=None, is_file=False):
-        self.val = val
-        self.level = level
-        self.parent = parent
-        self.subdir = list()
-        self.is_file = is_file
+# class Node:
+#     def __init__(self, val=None, level=None, parent=None, is_file=False):
+#         self.val = val
+#         self.level = level
+#         self.parent = parent
+#         self.subdir = list()
+#         self.is_file = is_file
+# 
+#     def add_node(self, node=None):
+#         self.subdir.append(node)
+# 
+#     def get_parent(self):
+#         return self.parent
+# 
+#     def __repr__(self):
+#         return self.val
+# 
+# class Tree:
+#     def __init__(self):
+#        self.root = Node('*', -1)
+# 
+#     def populate_tree(self, fs_string):
+#         fs_string = fs_string.split('\n')
+#         cur_root = self.root
+#         cur_level = self.root.level
+# 
+#         for part in fs_string:
+#             tabs = 0
+#             while part[tabs] == '\t':
+#                 tabs += 1
+# 
+#             if cur_level >= tabs:
+#                 i = cur_level - tabs + 1
+#                 while i != 0:
+#                     cur_root = cur_root.get_parent()
+#                     i -= 1
+# 
+#             if len(part.split('.')) > 1:
+#                 next_node = Node(part.strip(), tabs, cur_root, True)
+#             else:
+#                 next_node = Node(part.strip(), tabs, cur_root)
+# 
+#             cur_root.add_node(next_node)
+#             cur_level = tabs
+#             cur_root = next_node
+# 
+# def longest_path(node):
+#     if node.is_file:
+#         return len(node.val)
+#     if len(node.subdir) == 0:
+#         return 0
+# 
+#     max_len = 0
+#     for sub in node.subdir:
+#         max_len = max(max_len, longest_path(sub))
+# 
+#     length = max_len if node.level < 0 else max_len + len(node.val) + 1
+#     return length
 
-    def add_node(self, node=None):
-        self.subdir.append(node)
+def build_fs(input):
+    fs = {}
+    files = input.split('\n')
 
-    def get_parent(self):
-        return self.parent
+    current_path = []
+    for f in files:
+        indentation = 0
+        while '\t' in f[:2]:
+            indentation += 1
+            f = f[1:]
 
-    def __repr__(self):
-        return self.val
+        current_node = fs
+        for subdir in current_path[:indentation]:
+            current_node = current_node[subdir]
 
-class Tree:
-    def __init__(self):
-       self.root = Node('*', -1)
+        if '.' in f:
+            current_node[f] = True
+        else:
+            current_node[f] = {}
 
-    def populate_tree(self, fs_string):
-        fs_string = fs_string.split('\n')
-        cur_root = self.root
-        cur_level = self.root.level
+        current_path = current_path[:indentation]
+        current_path.append(f)
 
-        for part in fs_string:
-            tabs = 0
-            while part[tabs] == '\t':
-                tabs += 1
+    return fs
 
-            if cur_level >= tabs:
-                i = cur_level - tabs + 1
-                while i != 0:
-                    cur_root = cur_root.get_parent()
-                    i -= 1
-
-            if len(part.split('.')) > 1:
-                next_node = Node(part.strip(), tabs, cur_root, True)
-            else:
-                next_node = Node(part.strip(), tabs, cur_root)
-
-            cur_root.add_node(next_node)
-            cur_level = tabs
-            cur_root = next_node
-
-def longest_path(node):
-    if node.is_file:
-        return len(node.val)
-    if len(node.subdir) == 0:
-        return 0
-
-    max_len = 0
-    for sub in node.subdir:
-        max_len = max(max_len, longest_path(sub))
-
-    length = max_len if node.level < 0 else max_len + len(node.val) + 1
-    return length
+def lp(root):
+    paths = []
+    for key, node in root.items():
+        if node == True:
+            paths.append(key)
+        else:
+            paths.append(key + '/' + lp(node))
+    # filter out unfinished paths
+    print(paths)
+    paths = [path for path in paths if '.' in path]
+    if paths:
+        return max(paths, key=lambda path:len(path))
+    else:
+        return ''
 
 if __name__ == '__main__':
     p1 = "dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext"
