@@ -23,8 +23,28 @@ def maximums(arr, k):
 
     return maxes
 
+from collections import deque
+
+def max1(arr, k):
+    q = deque()
+    for i in range(k):
+        while q and arr[i] >= arr[q[-1]]:
+            q.pop()
+        q.append(i)
+        print(list(q))
+
+    for i in range(k, len(arr)):
+        print(arr[q[0]])
+        while q and q[0] <= i - k:
+            q.popleft()
+        while q and arr[i] >= arr[q[-1]]:
+            q.pop()
+        q.append(i)
+    print(arr[q[0]])
+
 
 if __name__ == '__main__':
     arr = [10, 5, 2, 7, 8, 7]
+    arr2 = [1, 2, 3, 4, 5, 6, 7, 8, 9] 
     k = 3
 
