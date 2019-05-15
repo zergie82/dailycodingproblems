@@ -15,49 +15,33 @@ and start = (3, 0) (bottom left) and end = (0, 0) (top left), the minimum number
 
 from collections import deque
 
-def is_allowed(point, board):
-    M = len(board)
-    N = len(board[0])
-    x, y = point
+def is_allowed(board, row, column):
+    if  row < 0 or column <0: 
+        return False
+    elif row >= len(board) or column >= len(board[0]):
+        return False
+    return not board[row][column]
 
-    if  x < 0 or y <0: 
-        return False
-    elif x >= M or y >= N:
-        return False
-    elif board[x][y]:
-        return False
-    else:
-        return True
+def possible_next(board, row, column):
+    return [(r, c) for r, c in [
+        (row, column - 1),
+        (row - 1, column),
+        (row + 1, column),
+        (row, column + 1)]
+        if is_allowed(board, r, c)
+    ]
 
 def play(board, start, end):
-    x, y = start
-    visited, queue = [], deque()
-    queue.append((x, y))
-    visited.append((x, y))
+    visited, queue = set(), deque()
+    queue.append((start, 0))
 
-    #while queue:
-    #    cx, cy = queue.popleft()
-    #    for next_point in ((cx + 1, cy), (cx -1, cy), (cx, cy + 1), (cx, cy - 1)):
-    #        if is_allowed(next_point, board):
-    #            if next_point not in visited:
-    #                visited.append(next_point)
-    #                queue.append(next_point)
-    #                if next_point == end:
-    #                    break
-    #    return visited
-    def bfs():
-        while queue:
-            cx, cy = queue.popleft()
-            for next_point in ((cx + 1, cy), (cx -1, cy), (cx, cy + 1), (cx, cy - 1)):
-                if is_allowed(next_point, board):
-                    if next_point not in visited:
-                        visited.append(next_point)
-                        queue.append(next_point)
-                        if next_point == end:
-                            break
-
-
-
+    while queue:
+        cords, count = queue.popleft()
+        if cords == end:
+            return count
+        visited.add(cords)
+        neighbours = possible_next(board, cords[0], cords[1])
+        queue.extend((neighbour, count + 1) for neighbour in neighbours if neighbour not in visited)
 
 if __name__ == '__main__':
     board = [
