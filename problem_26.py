@@ -20,6 +20,13 @@ class List:
     def __init__(self):
         self.head = None
 
+    def len(self):
+        counter = 0
+        node = self.head
+        while node:
+            counter += 1
+            node = node.nextnode
+        return counter
 
 def delete_from_list(l, k):
     trace = deque([], k + 1)
