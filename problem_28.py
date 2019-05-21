@@ -61,3 +61,4 @@ if __name__ == '__main__':
     words = ["the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"]
     k = 16
     lines = split_into_lines(words, k)
+    print([justify(line, k) for line in lines])
