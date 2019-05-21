@@ -15,25 +15,49 @@ For example, given the list of words ["the", "quick", "brown", "fox", "jumps", "
 
 '''
 
-def split(words, k):
+from math import floor
+
+def split_into_lines(words, k):
     output = []
-    row = ''
-    space_left = k
+    current_line = []
 
     for word in words:
-        if len(row) == 0 and len(word) <= space_left:
-            row += word
-            space_left -= len(word)
-        elif len(row) != 0 and len(word) + 1 <= space_left:
-            row += ' ' + word
-            space_left -= (len(word) + 1)
-        else:
-            output.append(row)
-            row = word
-            space_left = k - len(word)
+        if len(' '.join(current_line) + ' ' + word) > k:
+            output.append(current_line)
+            current_line = []
+        current_line.append(word)
 
+    output.append(current_line)
     return output
+
+def justify(words, k):
+    if len(words) == 1:
+        word = words[0]
+        num_spaces = k - len(word)
+        return word + ' ' * num_spaces
+
+    space_to_use = k - sum(len(word) for word in words)
+    spaces_allowed = len(words) - 1
+
+    space_chunk = floor(space_to_use / spaces_allowed)
+    space_left = space_to_use - ( spaces_allowed * space_chunk )
+
+    justified_output = []
+
+    for word in words:
+        justified_output.append(word)
+
+        current_space = ' ' * space_chunk
+        if space_left > 0:
+            current_space += ' '
+            space_left -= 1
+        justified_output.append(current_space)
+
+    print(justified_output)
+    return ''.join(justified_output).rstrip()
+
 
 if __name__ == '__main__':
     words = ["the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"]
     k = 16
+    lines = split_into_lines(words, k)
